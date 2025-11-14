@@ -1,0 +1,34 @@
+---
+description: Rules for package/library development to ensure ES module compatibility
+globs: 
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+  - "tsconfig*.json"
+  - "package.json"
+alwaysApply: true
+---
+
+[Package Development - ES Module Exports]
+- When creating npm packages that will be consumed by ES module bundlers (Next.js, Vite, etc.), ALL export statements MUST use explicit file paths with .js extensions
+- Directory imports like `export * from './components'` are INVALID in ES modules and will fail at runtime
+- ALWAYS use explicit paths: `export * from './components/index.js'` instead of `export * from './components'`
+- Even though source files are .ts, TypeScript requires .js extensions in import/export paths for ES module output
+- This applies to all export statements in index.ts files and any barrel export files
+
+[TypeScript Configuration for Packages]
+- For package builds (tsconfig.build.json), set moduleResolution to "node16" or "node" (not "bundler") when shipping compiled output
+- Ensure module is set to "ESNext" or "ES2020" for modern ES module output
+- Add "type": "module" to package.json if shipping pure ESM packages
+
+[Export Path Rules]
+- ✅ CORRECT: `export * from './lib/index.js'`
+- ✅ CORRECT: `export * from './components/index.js'`
+- ✅ CORRECT: `export { Something } from './utils.js'`
+- ❌ WRONG: `export * from './lib'`
+- ❌ WRONG: `export * from './components'`
+- ❌ WRONG: `export { Something } from './utils'` (without extension)
+
+[Verification]
+- After building, check dist/index.js and ensure all export paths have .js extensions
+- Test the built package in a consuming Next.js or ES module project to verify imports work
+- If using TypeScript path aliases (@/...), ensure they are resolved to relative paths in the compiled output (not left as aliases)

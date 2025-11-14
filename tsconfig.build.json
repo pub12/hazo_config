@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "module": "Node16",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "allowImportingTsExtensions": false,
+    "moduleResolution": "Node16"
+  },
+  "include": ["src"],
+  "exclude": ["**/*.stories.tsx", "**/*.test.tsx", "**/*.test.ts"]
+}
+
